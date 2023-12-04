@@ -1,4 +1,3 @@
-```python
 # Summary of the Chosen Model, Training Process, and Critical Findings
 
 ## Chosen Model
@@ -40,4 +39,4 @@ history = model.fit(x_train, y_train, epochs=30, batch_size=128, validation_spli
 - Continuous monitoring and improvement of the model based on real-world data feedback.
 ```
 
-This summary provides a concise overview for users reviewing your code and model performance.
+#This summary provides a concise overview for users reviewing your code and model performance.

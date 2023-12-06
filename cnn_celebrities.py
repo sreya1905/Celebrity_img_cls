@@ -100,7 +100,39 @@ print('\n-----------------Classification Report-----------------\n', classificat
 
 print("\n-----------------Model Prediction-----------------\n")
 
+def load_image(image_path):
+    # Load the image
+    image = cv2.imread(image_path)
+
+    # Convert the image to RGB if necessary
+    if len(image.shape) == 2:
+        image = cv2.cvtColor(image, cv2.COLOR_GRAY2RGB)
+
+    # Preprocess the image
+    image = cv2.resize(image, (128, 128))
+    image = np.array(image)
+    image = image.reshape(1, 128, 128, 3)
+
+    # Normalize the image
+    image = tf.keras.utils.normalize(image, axis=1)
+
+    return image
+
 def make_prediction(img_path, model):
+    # Load and preprocess the image
+    image = load_image(img_path)
+
+    # Make the prediction
+    prediction = model.predict(image)
+
+    # Convert the prediction to class label
+    predicted_class_index = np.argmax(prediction)
+    class_labels = ['Lionel Messi', 'Maria Sharapova', 'Roger Federer', 'Serena Williams', 'Virat Kohli']
+    predicted_class_label = class_labels[predicted_class_index]
+
+    # Return the predicted class label
+    return predicted_class_label
+
     img = cv2.imread(img_path)
     img = Image.fromarray(img)
     img = img.resize((128, 128))
@@ -116,6 +148,17 @@ def make_prediction(img_path, model):
     
     print("Predicted Celebrity: ", predicted_class_label)
 
-# Example usage:
-image_path_to_predict = r'C:\Users\Sreya\Desktop\deeplearning\image_classification\Dataset_Celebrities\cropped\maria_sharapova\maria_sharapova17.png'
-make_prediction(image_path_to_predict, model)
+# Make predictions on new images
+image_paths = [
+    r'C:\Users\Sreya\Desktop\deeplearning\image_classification\Dataset_Celebrities\cropped\maria_sharapova\maria_sharapova17.png',
+    r'C:\Users\Sreya\Desktop\deeplearning\image_classification\Dataset_Celebrities\cropped\lionel_messi\lionel_messi2.png',
+    r'C:\Users\Sreya\Desktop\deeplearning\image_classification\Dataset_Celebrities\cropped\roger_federer\roger_federer2.png',
+    r'C:\Users\Sreya\Desktop\deeplearning\image_classification\Dataset_Celebrities\cropped\serena_williams\serena_williams8.png',
+    r'C:\Users\Sreya\Desktop\deeplearning\image_classification\Dataset_Celebrities\cropped\virat_kohli\virat_kohli5.png'
+]
+
+for image_path in image_paths:
+    image_filename = os.path.basename(image_path)  # Extract filename from image path
+    predicted_class_label = make_prediction(image_path, model)
+    print(f"Predicted label for image {image_filename}: {predicted_class_label}")
+
